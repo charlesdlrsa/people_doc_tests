@@ -8,11 +8,16 @@ $ python manage.py migrate
 $ python manage.py runserver
 ```
 
-You can now make the different requests by requesting these endpoints with the 'http://localhost/' prefix :
-- create a restaurant : POST /restaurants/  with the body {'name': 'Burger1'}
-- delete a restaurant : DELETE /restaurants/name/
-- get all the restaurants : GET /restaurants
-- get a random restaurant : GET /restaurants/random
+You can now make the different requests by requesting these endpoints with the 'http://localhost:8000' prefix :
+- create a restaurant : POST `/restaurants`  with the body {'name': 'Burger1'}
+- delete a restaurant : DELETE `/restaurants/<name>`
+- get all the restaurants : GET `/restaurants`
+- get a random restaurant : GET `/restaurants/random`
+
+You can run the different tests with the command:
+```bash
+$ python manage.py test restaurants
+```
 
 
 # API consumer
