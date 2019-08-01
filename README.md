@@ -1,5 +1,10 @@
 # API Server
 
+Requirements :
+- python 3.6
+- django 
+- Django Rest Framework 
+
 To be able to request the api, you have to run the server :
 
 ```bash
