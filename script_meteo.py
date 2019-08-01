@@ -4,10 +4,10 @@ from datetime import datetime
 city_name = input('Enter the name of the city whose wether you are interested in :')
 date = datetime.today().strftime('%Y/%m/%d')
 
-response_city = requests.get('http://www.metaweather.com/api/location/search/?query=%s' % city_name).json()
+response_city = requests.get('http://www.metaweather.com/api/location/search/?query={}'.format(city_name)).json()
 while response_city == []:
     city_name = input('Please, enter the name of a city that exists :')
-    response_city = requests.get('http://www.metaweather.com/api/location/search/?query=%s' % city_name).json()
+    response_city = requests.get('http://www.metaweather.com/api/location/search/?query={}'.format(city_name)).json()
 city_woeid = response_city[0]['woeid']
 
 response_weather = requests.get('https://www.metaweather.com/api/location/%s/%s' % (city_woeid, date)).json()
