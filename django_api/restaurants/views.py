@@ -1,9 +1,3 @@
-# from django.http import HttpResponse
-# import random
-# from django.views.decorators.csrf import csrf_exempt
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework_json_api.views import ModelViewSet
 import random 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -14,7 +8,7 @@ from .models import Restaurant
 from .serializers import RestaurantSerializer
 
 
-class GetAllRestaurantsView(APIView):
+class GetAllRestaurantsOrCreateOneView(APIView):
 
     def get(self, request):
         restaurants = Restaurant.objects.all()
@@ -26,7 +20,8 @@ class GetAllRestaurantsView(APIView):
         try:
             restaurant = Restaurant(name=restaurant_name)
             restaurant.save()
-            return Response("Your restaurant was saved")
+            serializer = RestaurantSerializer(restaurant)
+            return Response(serializer.data)
         except IntegrityError:
             return Response("You must provide a correct name for the restaurant", 400)
 
@@ -45,7 +40,9 @@ class DeleteRestaurantView(APIView):
 class GetRandomRestaurantView(APIView):
 
     def get(self, request):
-        restaurants = Restaurant.objects.all()
-        restaurant = restaurants[random.randrange(len(restaurants))] 
-        serializer = RestaurantSerializer(restaurant)
-        return Response(serializer.data)
+        restaurant = Restaurant.objects.order_by('?').first()
+        if restaurant:
+            serializer = RestaurantSerializer(restaurant)
+            return Response(serializer.data)
+        else: 
+            return Response("No restaurants are registered.")
