@@ -4,16 +4,14 @@ from rest_framework.views import status
 from rest_framework.response import Response
 from .models import Restaurant
 from .serializers import RestaurantSerializer
-from .views import GetAllRestaurantsView, GetAllRestaurantsView, DeleteRestaurantView
 
 
 class BaseViewTest(APITestCase):
     client = APIClient()
 
     @staticmethod
-    def create_restaurant(name=""):
-        if name != "":
-            Restaurant.objects.create(name=name)
+    def create_restaurant(name):
+        Restaurant.objects.create(name=name)
 
     def setUp(self):
         # add test data
@@ -31,7 +29,7 @@ class GetAllRestaurantsViewTest(BaseViewTest):
         """
         # hit the API endpoint
         response = self.client.get(
-            reverse('restaurants:get-all-restaurants')
+            reverse('restaurants:get-all-restaurants-or-create-one')
         )
         # fetch the data from db
         expected = Restaurant.objects.all()
@@ -46,10 +44,9 @@ class GetAllRestaurantsViewTest(BaseViewTest):
         """
         # hit the API endpoint
         response = self.client.post(
-            reverse('restaurants:get-all-restaurants'), {'name':'burgerking'}
+            reverse('restaurants:get-all-restaurants-or-create-one'), {'name':'burgerking'}
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        restaurant = Restaurant.objects.filter(name='burgerking').first()
         self.assertTrue(Restaurant.objects.get(name='burgerking'))
 
     def test_create_new_restaurant_without_name(self):
@@ -59,7 +56,7 @@ class GetAllRestaurantsViewTest(BaseViewTest):
         """
         # hit the API endpoint
         response = self.client.post(
-            reverse('restaurants:get-all-restaurants')
+            reverse('restaurants:get-all-restaurants-or-create-one')
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
