@@ -1,5 +1,3 @@
-import random 
-from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.utils import IntegrityError
@@ -9,14 +7,13 @@ from .serializers import RestaurantSerializer
 
 
 class GetAllRestaurantsOrCreateOneView(APIView):
-
     def get(self, request):
         restaurants = Restaurant.objects.all()
         serializer = RestaurantSerializer(restaurants, many=True)
         return Response(serializer.data)
-    
+
     def post(self, request):
-        restaurant_name = request.data.get('name')
+        restaurant_name = request.data.get("name")
         try:
             restaurant = Restaurant(name=restaurant_name)
             restaurant.save()
@@ -27,7 +24,6 @@ class GetAllRestaurantsOrCreateOneView(APIView):
 
 
 class DeleteRestaurantView(APIView):
-
     def delete(self, request, name):
         try:
             restaurant = Restaurant.objects.get(name=name)
@@ -38,11 +34,10 @@ class DeleteRestaurantView(APIView):
 
 
 class GetRandomRestaurantView(APIView):
-
     def get(self, request):
-        restaurant = Restaurant.objects.order_by('?').first()
+        restaurant = Restaurant.objects.order_by("?").first()
         if restaurant:
             serializer = RestaurantSerializer(restaurant)
             return Response(serializer.data)
-        else: 
+        else:
             return Response("No restaurants are registered.")
